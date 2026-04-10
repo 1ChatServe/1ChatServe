@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import chat.aikf.common.core.utils.RequestContextHelper;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -29,26 +30,30 @@ public class FeignConfig {
                 log.info("Feign拦截器开始，当前请求URL: {}", request.getRequestURL());
                 log.info("Feign目标URL: {}", template.url());
 
-                // 1. 获取所有头部名称
-                Enumeration<String> headerNames = request.getHeaderNames();
                 List<String> passedHeaders = new ArrayList<>();
 
-                // 2. 遍历并传递所有头部
-                while (headerNames.hasMoreElements()) {
-                    String headerName = headerNames.nextElement();
-                    String headerValue = request.getHeader(headerName);
+                // 1. 传递真实IP
+                String originalIp = RequestContextHelper.getOriginalIp(request);
+                if (originalIp != null && !originalIp.trim().isEmpty()) {
+                    template.header("X-Original-Client-IP", originalIp);
+                    passedHeaders.add("X-Original-Client-IP");
+                    log.debug("传递头部: X-Original-Client-IP = {}", originalIp);
+                }
 
-                    // 跳过一些不需要传递的头部
-                    if (shouldSkipHeader(headerName)) {
-                        log.debug("跳过头部: {}", headerName);
-                        continue;
-                    }
+                // 2. 传递User-Agent
+                String userAgent = request.getHeader("User-Agent");
+                if (userAgent != null && !userAgent.trim().isEmpty()) {
+                    template.header("User-Agent", userAgent);
+                    passedHeaders.add("User-Agent");
+                    log.debug("传递头部: User-Agent = {}", userAgent);
+                }
 
-                    if (headerValue != null && !headerValue.trim().isEmpty()) {
-                        template.header(headerName, headerValue);
-                        passedHeaders.add(headerName);
-                        log.debug("传递头部: {} = {}", headerName, headerValue);
-                    }
+                // 3. 传递Accept-Language
+                String acceptLanguage = request.getHeader("Accept-Language");
+                if (acceptLanguage != null && !acceptLanguage.trim().isEmpty()) {
+                    template.header("Accept-Language", acceptLanguage);
+                    passedHeaders.add("Accept-Language");
+                    log.debug("传递头部: Accept-Language = {}", acceptLanguage);
                 }
 
                 log.info("Feign传递了 {} 个头部: {}", passedHeaders.size(), passedHeaders);
