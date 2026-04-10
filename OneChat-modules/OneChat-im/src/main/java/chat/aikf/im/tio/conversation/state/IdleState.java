@@ -12,6 +12,7 @@ import chat.aikf.im.tio.starter.OneChatImStarter;
 import chat.aikf.ops.api.domain.OneChatkfVisitor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.tio.core.Tio;
 import org.tio.http.common.HttpRequest;
@@ -28,6 +29,7 @@ public class IdleState implements VisitorState {
     private CustomerAssignService customerAssignService;
 
     @Autowired
+    @Lazy
     private ChatMessageService chatMessageService;
 
     @Autowired
@@ -43,31 +45,31 @@ public class IdleState implements VisitorState {
     public void handleToGuest(HttpRequest httpRequest, VisitorSessionKey restored) {
 
         //分配接待员工给客户(分配逻辑)
-        IdentityMsgDto identityMsgDto = customerAssignService.
-                getOnlineUserId( restored.webStyleId(), restored.visitorId());
-        log.info("接待人:"+identityMsgDto);
-        //访客消息入库处理
-        if(null != identityMsgDto){
-            //构建访客信息(如果或更新+构建缓存链接关系)
-            OneChatkfVisitor oneChatkfVisitor =  IdentityMsgDto.buildOneChatkfVisitorInfo(httpRequest,restored,identityMsgDto, DeviceUtils.parseDeviceWithLanguage(httpRequest
-                    .getHeader(OneChatImConstant.TIO_USER_AGENT),httpRequest
-                    .getHeader(OneChatImConstant.TIO_ACCEPT_LANGUAGE)));
-            identityMsgDto.setVisitor(oneChatkfVisitor);
-            try {
-                // 尝试发 MQ
-                mqSender.sendMsg(CommonMqConstants.VISITOR_PRODUCER,identityMsgDto);
-            } catch (Exception mqEx) {
-                log.warn("MQ 发送失败，visitorUserId={}，降级落库", oneChatkfVisitor.getVisitorId());
-                // 降级：直接调用落库处理
-                chatMessageService.handleVisitorInfo(identityMsgDto);
-            }
-        }else{ //初始化分配失败,关闭连接
-
-
-            Tio.closeUser(oneChatImStarter.getServerTioConfig(),restored.toString(),"初始化异常分配失败");
-
-
-        }
+//        IdentityMsgDto identityMsgDto = customerAssignService.
+//                getOnlineUserId( restored.webStyleId(), restored.visitorId());
+//        log.info("接待人:"+identityMsgDto);
+//        //访客消息入库处理
+//        if(null != identityMsgDto){
+//            //构建访客信息(如果或更新+构建缓存链接关系)
+//            OneChatkfVisitor oneChatkfVisitor =  IdentityMsgDto.buildOneChatkfVisitorInfo(httpRequest,restored,identityMsgDto, DeviceUtils.parseDeviceWithLanguage(httpRequest
+//                    .getHeader(OneChatImConstant.TIO_USER_AGENT),httpRequest
+//                    .getHeader(OneChatImConstant.TIO_ACCEPT_LANGUAGE)));
+//            identityMsgDto.setVisitor(oneChatkfVisitor);
+////            try {
+////                // 尝试发 MQ
+////                mqSender.sendMsg(CommonMqConstants.VISITOR_PRODUCER,identityMsgDto);
+////            } catch (Exception mqEx) {
+//                log.warn("MQ 发送失败，visitorUserId={}，降级落库", oneChatkfVisitor.getVisitorId());
+//                // 降级：直接调用落库处理
+//                chatMessageService.handleVisitorInfo(identityMsgDto);
+////            }
+//        }else{ //初始化分配失败,关闭连接
+//
+//
+//            Tio.closeUser(oneChatImStarter.getServerTioConfig(),restored.toString(),"初始化异常分配失败");
+//
+//
+//        }
     }
 
     @Override

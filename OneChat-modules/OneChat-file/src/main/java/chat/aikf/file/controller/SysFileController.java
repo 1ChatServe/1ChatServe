@@ -1,5 +1,6 @@
 package chat.aikf.file.controller;
 
+import chat.aikf.common.core.utils.AgentAvatarUtils;
 import chat.aikf.common.core.utils.DefaultAvatarUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,6 +151,27 @@ public class SysFileController
     public ResponseEntity<Resource> findVisitorAvatars(@PathVariable String avatarName){
 
         Resource resource = new ClassPathResource("static" +  DefaultAvatarUtils.getAvatarPathByName(avatarName));
+
+        // 设置响应头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setCacheControl("public, max-age=86400"); // 可选缓存
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
+
+     /**
+     * 获取agent头像(内置agent头像,可自定义)
+     * @param avatarName
+     * @return
+     */
+    @GetMapping("/agentImg/{avatarName}")
+    public ResponseEntity<Resource> findAgentAvatars(@PathVariable String avatarName){
+
+        Resource resource = new ClassPathResource("static" +  AgentAvatarUtils.getAvatarPathByName(avatarName));
 
         // 设置响应头
         HttpHeaders headers = new HttpHeaders();

@@ -10,6 +10,7 @@
             ockv.id,
             ockv.name,
             ockv.ipaddr,
+            ockv.user_account,
             ockv.current_view_time,
             ockv.first_view_time,
             ockv.view_number,
@@ -51,6 +52,7 @@
         <if test="visitor.currentState !=null">
             and ockv.current_state=#{visitor.currentState}
         </if>
+        ORDER BY ockv.update_time DESC
     </select>
 
     <select id="countOneChatKfCsStats" resultType="chat.aikf.ops.domain.OneChatKfCsStatsVO">

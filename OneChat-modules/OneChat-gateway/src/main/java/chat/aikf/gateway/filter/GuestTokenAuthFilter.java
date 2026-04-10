@@ -48,7 +48,8 @@ public class GuestTokenAuthFilter implements GlobalFilter, Ordered {
 
         // 另一种写法：如果不是任何受保护路径，就放行
         if (!path.startsWith("/ws/guest")
-                && !path.startsWith("/file/chatUploadToVisitor")) {
+                && !path.startsWith("/file/chatUploadToVisitor")
+                && !path.startsWith("/im/im/transferUser")) {
             return chain.filter(exchange);
         }
 
@@ -60,7 +61,7 @@ public class GuestTokenAuthFilter implements GlobalFilter, Ordered {
 
         if (path.startsWith("/ws/guest")){
             sessionToken= request.getQueryParams().getFirst(SecurityConstants.SESSION_TOKEN_PARAM); //路径获取
-        }else if(path.startsWith("/file/chatUploadToVisitor")){
+        }else if(path.startsWith("/file/chatUploadToVisitor") || path.startsWith("/im/im/transferUser")){
             sessionToken= getToken(request); //请求头获取
         }
 //        else if(path.startsWith("/file/chatMsgFile")&&CollectionUtil.isNotEmpty(request.getHeaders().get("client_type"))){

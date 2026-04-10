@@ -31,7 +31,7 @@
         <fastjson.version>2.0.57</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
         <minio.version>8.2.2</minio.version>
-        <poi.version>4.1.2</poi.version>
+        <poi.version>5.2.3</poi.version>
         <springdoc.version>2.6.0</springdoc.version>
         <lombok.version>1.18.32</lombok.version>
         <transmittable-thread-local.version>2.14.4</transmittable-thread-local.version>
@@ -252,6 +252,14 @@
             <dependency>
                 <groupId>chat.aikf</groupId>
                 <artifactId>OneChat-api-im</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>chat.aikf</groupId>
+                <artifactId>OneChat-api-ai</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
 

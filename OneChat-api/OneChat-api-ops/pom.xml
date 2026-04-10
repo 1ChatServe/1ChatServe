@@ -36,6 +36,13 @@
         </dependency>
 
 
+        <!-- RuoYi Common Core-->
+        <dependency>
+            <groupId>chat.aikf</groupId>
+            <artifactId>OneChat-api-ai</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 </project>

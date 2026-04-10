@@ -2,16 +2,26 @@ package chat.aikf.im.tio.conversation.service;
 
 
 
+//import chat.aikf.common.core.constant.SecurityConstants;
+//import chat.aikf.common.core.domain.R;
 import chat.aikf.common.core.utils.SpringUtils;
 import chat.aikf.im.tio.conversation.state.EndState;
 import chat.aikf.im.tio.conversation.state.IdleState;
 import chat.aikf.im.tio.conversation.state.ReceiveState;
 import chat.aikf.im.tio.conversation.state.VisitorState;
 import chat.aikf.im.tio.model.VisitorSessionKey;
+//import chat.aikf.im.tio.utils.KfCacheRelUtils;
+//import chat.aikf.ops.api.RemoteKfRuleService;
 import chat.aikf.ops.api.constant.OneChatVisitorSate;
+//import chat.aikf.ops.api.domain.OneChatKfRule;
+//import chat.aikf.ops.api.domain.OneChatKfRuleScope;
+//import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tio.http.common.HttpRequest;
+//
+//import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,6 +43,14 @@ public class VisitorStateService {
         STATE_HANDLER_MAP.put(OneChatVisitorSate.END_STATE, SpringUtils.getBean(EndState.class));
 
     }
+
+
+//    @Autowired
+//    private RemoteKfRuleService remoteKfRuleService;
+//
+//
+//    @Autowired
+//    private KfCacheRelUtils kfCacheRelUtils;
 
 
 
@@ -80,6 +98,20 @@ public class VisitorStateService {
                 }
             }
         }
+
+
+    }
+
+    /**
+     * 处理访客从AI转接到人工的逻辑
+     * @param webStyleId 网页样式ID
+     * @param kfRuleId 客服规则ID
+     * @param visitorId 访客ID
+     * @param userAccount 员工账号
+     */
+    public void handleAiToHumanTransfer(String webStyleId, String kfRuleId, String visitorId ,String userAccount) {
+
+        processByStateToUser(webStyleId, kfRuleId, visitorId, userAccount, OneChatVisitorSate.RECEIVE_STATE);
 
 
     }

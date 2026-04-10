@@ -54,6 +54,16 @@ public class RemoteKfVisitorFallbackFactory implements FallbackFactory<RemoteKfV
             public R<List<OneChatkfVisitor>> findAppointVisitorList(OneChatkfVisitor oneChatkfVisitor, String source) {
                 return R.fail("根据指定条件获取访客(多个)失败:" + cause.getMessage());
             }
+
+            @Override
+            public R<OneChatkfVisitor> getOneChatkfVisitorById(Long id, String source) {
+                return R.fail("根据id条件获取访客失败:" + cause.getMessage());
+            }
+
+            @Override
+            public R<List<OneChatKfVisitorMsg>> getMsgList(Long kfVisitorId, String source) {
+                return R.fail("获取访客消息失败:" + cause.getMessage());
+            }
         };
     }
 }

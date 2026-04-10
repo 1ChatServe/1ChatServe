@@ -49,8 +49,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String url = request.getURI().getPath();
 
         // 👇【新增】专门处理 /ws/user 开头的 WebSocket 请求
-        if (url.startsWith("/ws/user")) {
+        if (url.startsWith("/ws/user") ) {
             return handleWebSocketUserRequest(exchange, chain);
+        }
+
+        if(url.startsWith("/im/im/transferUser")){
+            return chain.filter(exchange);
         }
 
 //        if(url.startsWith("/file/chatMsgFile")){

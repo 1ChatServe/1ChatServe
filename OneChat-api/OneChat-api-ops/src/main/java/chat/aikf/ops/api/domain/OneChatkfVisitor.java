@@ -131,7 +131,7 @@ public class OneChatkfVisitor extends BaseEntity {
 
 
     /**
-     * 当前状态(0:排队中;1:对话中;2:已结束)
+     * 当前状态(0:排队中;1:对话中;2:已结束；5:ai对话中)
      */
     private Integer currentState;
 
@@ -167,6 +167,13 @@ public class OneChatkfVisitor extends BaseEntity {
     private String tagIds;
 
 
+    /**
+     * ai评分
+     */
+    @TableField(exist = false)
+    private Integer aiScore;
+
+
 
     /**
      * 编辑客户标签关系如惨
@@ -187,6 +194,15 @@ public class OneChatkfVisitor extends BaseEntity {
      */
     @TableField(exist = false)
     private long notReadNumber;
+
+
+
+    public static String getVisitorIdLast4(String visitorId) {
+        if (visitorId == null || visitorId.length() < 4) {
+            return visitorId; // 或返回 "" / null，根据业务需求
+        }
+        return visitorId.substring(visitorId.length() - 4);
+    }
 
 
 

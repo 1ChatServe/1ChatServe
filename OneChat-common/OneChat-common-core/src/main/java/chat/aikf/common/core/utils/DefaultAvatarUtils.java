@@ -22,8 +22,11 @@ public class DefaultAvatarUtils {
             "/file/avatars/avatar-7.png",
             "/file/avatars/avatar-8.png",
             "/file/avatars/avatar-9.png",
-            "/file/avatars/avatar-10.png"
+            "/file/avatars/avatar-10.png",
+            "/file/avatars/ai-avatar.png"
     };
+
+
 
 
     //默认头像

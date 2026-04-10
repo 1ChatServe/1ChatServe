@@ -54,4 +54,55 @@ public class AiModelsProperties {
             return apiKey != null && !apiKey.trim().isEmpty();
         }
     }
+
+    // Milvus向量数据库配置
+    private MilvusConfig milvus = new MilvusConfig();
+
+    public MilvusConfig getMilvus() {
+        return milvus;
+    }
+
+    public void setMilvus(MilvusConfig milvus) {
+        this.milvus = milvus;
+    }
+
+    // Milvus配置类
+    public static class MilvusConfig {
+        private String host = "localhost";
+        private String port = "19530";
+        private String collection = "oneChat_Base";
+        private Integer dimension = 1536; //向量维度
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public void setPort(String port) {
+            this.port = port;
+        }
+
+        public String getCollection() {
+            return collection;
+        }
+
+        public void setCollection(String collection) {
+            this.collection = collection;
+        }
+
+        public Integer getDimension() {
+            return dimension;
+        }
+
+        public void setDimension(Integer dimension) {
+            this.dimension = dimension;
+        }
+    }
 }

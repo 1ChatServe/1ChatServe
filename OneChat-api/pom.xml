@@ -12,6 +12,7 @@
         <module>OneChat-api-system</module>
         <module>OneChat-api-ops</module>
         <module>OneChat-api-im</module>
+        <module>OneChat-api-ai</module>
     </modules>
 
     <artifactId>OneChat-api</artifactId>

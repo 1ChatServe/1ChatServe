@@ -43,13 +43,13 @@ public abstract class OneChatImConstant {
     /**
      * tio的User_Agent标识
      */
-    public static final String TIO_USER_AGENT="user-agent";
+    public static final String TIO_USER_AGENT="userAgent";
 
 
     /**
      * tio的accept-language标识
      */
-    public static final String TIO_ACCEPT_LANGUAGE="accept-language";
+    public static final String TIO_ACCEPT_LANGUAGE="header_accept-language";
 
 
     /**

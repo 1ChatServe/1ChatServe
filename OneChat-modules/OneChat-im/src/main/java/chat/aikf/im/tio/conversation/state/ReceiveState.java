@@ -1,6 +1,7 @@
 package chat.aikf.im.tio.conversation.state;
 
 
+
 import chat.aikf.im.tio.model.VisitorSessionKey;
 import chat.aikf.im.tio.utils.KfCacheRelUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ public class ReceiveState implements VisitorState {
 
 
 
+
+
     @Override
     public void handleToGuest(HttpRequest httpRequest, VisitorSessionKey restored) {
 
@@ -32,7 +35,6 @@ public class ReceiveState implements VisitorState {
     public void handleToUser(String kfRuleId, String visitorId, String userAccount, String webStyleId) {
 
         kfCacheRelUtils.updateLinkInitCache(visitorId,webStyleId);
-
 
     }
 

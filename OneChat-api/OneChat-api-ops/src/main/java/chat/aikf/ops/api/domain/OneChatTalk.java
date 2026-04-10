@@ -1,6 +1,7 @@
 package chat.aikf.ops.api.domain;
 
 import chat.aikf.common.core.web.domain.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,19 @@ public class OneChatTalk extends BaseEntity {
      * 话术内容
      */
     private String content;
+
+
+    /**
+     * 分类id
+     */
+    private Long categoryId;
+
+
+    /**
+     * 分类名称
+     */
+    @TableField(exist = false)
+    private String categoryName;
 
     /**
      * 消息类型(text文字)

@@ -1,13 +1,8 @@
 package chat.aikf.im.mq.listener;
 
-import chat.aikf.common.core.constant.SecurityConstants;
-import chat.aikf.common.core.utils.SpringUtils;
-import chat.aikf.common.security.utils.SecurityUtils;
 import chat.aikf.im.tio.model.IdentityMsgDto;
-import chat.aikf.im.tio.model.OneChatMsgDto;
+import chat.aikf.im.tio.model.GuestResqMsgDto;
 import chat.aikf.im.tio.service.ChatMessageService;
-import chat.aikf.ops.api.RemoteKfRuleService;
-import chat.aikf.ops.api.domain.OneChatkfVisitor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,11 +30,11 @@ public class ChatMessageListener {
      * @return
      */
     @Bean
-    public Consumer<OneChatMsgDto> chatMessageConsumer() {
+    public Consumer<GuestResqMsgDto> chatMessageConsumer() {
         return message -> {
             try {
                 log.info("【IM】开始处理访客处理消息: {}", message);
-                chatMessageService.savePendingMessage(message);
+                chatMessageService.savePendingMessage(message,true);
 
             } catch (Exception e) {
                 log.error("处理消息失败，将触发重试或进入 DLQ: {}", message, e);

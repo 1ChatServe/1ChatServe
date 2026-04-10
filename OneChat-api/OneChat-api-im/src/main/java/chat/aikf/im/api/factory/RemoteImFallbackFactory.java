@@ -2,6 +2,7 @@ package chat.aikf.im.api.factory;
 
 import chat.aikf.common.core.domain.R;
 import chat.aikf.im.api.RemoteImService;
+import chat.aikf.im.api.domain.dto.GuestIdentityMsgDto;
 import chat.aikf.im.api.domain.dto.VisitorStateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -27,9 +28,19 @@ public class RemoteImFallbackFactory implements FallbackFactory<RemoteImService>
                 return R.fail("结束会话失败:" + cause.getMessage());
             }
 
+//            @Override
+//            public R accessChat(VisitorStateDto visitorStateDto, String source) {
+//                return R.fail("会话接入中失败:" + cause.getMessage());
+//            }
+
             @Override
-            public R accessChat(VisitorStateDto visitorStateDto, String source) {
-                return R.fail("会话接入中失败:" + cause.getMessage());
+            public  R<GuestIdentityMsgDto> findInitSession(String webStyleId, String visitorId) {
+                return R.fail("获取客户初始化数据失败:" + cause.getMessage());
+            }
+
+            @Override
+            public R transferUser(VisitorStateDto visitorStateDto, String source) {
+                return R.fail("转接人工失败:" + cause.getMessage());
             }
         };
     }

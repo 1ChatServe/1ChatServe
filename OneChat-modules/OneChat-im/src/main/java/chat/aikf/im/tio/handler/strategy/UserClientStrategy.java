@@ -4,28 +4,23 @@ import chat.aikf.common.core.constant.Constants;
 import chat.aikf.common.core.utils.SpringUtils;
 import chat.aikf.common.core.utils.StringUtils;
 import chat.aikf.common.mq.content.CommonMqConstants;
-import chat.aikf.common.security.utils.SecurityUtils;
 import chat.aikf.im.mq.sender.MqSender;
 import chat.aikf.im.tio.constant.OneChatImConstant;
-import chat.aikf.im.tio.model.IdentityMsgDto;
-import chat.aikf.im.tio.model.OneChatMsgDto;
+import chat.aikf.im.tio.model.GuestResqMsgDto;
 import chat.aikf.im.tio.service.ChatMessageService;
 import chat.aikf.im.tio.utils.PingUtils;
 import chat.aikf.im.tio.utils.UrlUtils;
 import chat.aikf.ops.api.constant.OneChatReadMsgState;
-import chat.aikf.system.api.model.LoginUser;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.tio.core.ChannelContext;
 import org.tio.core.Tio;
 import org.tio.http.common.HttpRequest;
 import org.tio.http.common.HttpResponse;
-import org.tio.http.common.RequestLine;
 import org.tio.websocket.common.WsRequest;
 import org.tio.websocket.common.WsResponse;
 
 import java.util.Date;
-import java.util.Map;
 
 
 /**
@@ -73,25 +68,26 @@ public class UserClientStrategy implements ClientStrategy{
             //  第一步：优先判断是否为心跳消息
             if (PingUtils.isPingMessage(text)) {
                 // 回复 pong，保持连接
-                Tio.send(channelContext, WsResponse.fromText(PingUtils.buildPongMessageToUser(), Constants.UTF8));
+                Tio.send(channelContext, WsResponse.fromText(PingUtils.buildPong(), Constants.UTF8));
                 return null; // 不再处理后续逻辑
             }else{
 
 
-                if (OneChatMsgDto.isValidOneChatMsgDto(text)) {
-                    OneChatMsgDto chatMsgDto = JSONUtil.toBean(text, OneChatMsgDto.class);
+                if (GuestResqMsgDto.isValidOneChatMsgDto(text)) {
+                    GuestResqMsgDto chatMsgDto = JSONUtil.toBean(text, GuestResqMsgDto.class);
                     chatMsgDto.setSendTime(new Date());
                     chatMsgDto.setClientType((String) channelContext.getAttribute(OneChatImConstant.CLIENT_TYPE));
+                    chatMsgDto.setVisitorId(chatMsgDto.getToObj());
                     chatMsgDto.setReadReceipt(OneChatReadMsgState.readReceipt); //客服发的消息标记为已读
                     chatMsgDto.setMsgSource(1);
-                try {
-                    // 尝试发 MQ
-                  SpringUtils.getBean(MqSender.class).sendMsg(CommonMqConstants.CHAT_MESSAGE_PRODUCER,chatMsgDto);
-                } catch (Exception mqEx) {
-                    log.warn("MQ 发送失败，chatMsgDto={}，降级落库", JSONUtil.toJsonStr(chatMsgDto), mqEx);
+//                try {
+//                    // 尝试发 MQ
+//                  SpringUtils.getBean(MqSender.class).sendMsg(CommonMqConstants.CHAT_MESSAGE_PRODUCER,chatMsgDto);
+//                } catch (Exception mqEx) {
+//                    log.warn("MQ 发送失败，chatMsgDto={}，降级落库", JSONUtil.toJsonStr(chatMsgDto), mqEx);
                     // 降级：直接保存到 DB
-                    SpringUtils.getBean(ChatMessageService.class).savePendingMessage(chatMsgDto);
-                }
+                    SpringUtils.getBean(ChatMessageService.class).savePendingMessage(chatMsgDto,false);
+//                }
                 }
             }
 

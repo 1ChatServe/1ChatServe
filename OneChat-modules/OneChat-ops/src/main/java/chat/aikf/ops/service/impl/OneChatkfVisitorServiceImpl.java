@@ -2,7 +2,11 @@ package chat.aikf.ops.service.impl;
 
 
 import chat.aifk.common.datascope.annotation.DataScope;
+import chat.aikf.ai.api.RemoteAstService;
+import chat.aikf.ai.api.domain.SessionAnalysisResult;
 import chat.aikf.common.core.constant.Constants;
+import chat.aikf.common.core.constant.SecurityConstants;
+import chat.aikf.common.core.domain.R;
 import chat.aikf.common.core.utils.DefaultAvatarUtils;
 import chat.aikf.common.core.utils.StringUtils;
 import chat.aikf.common.core.web.domain.BaseEntity;
@@ -46,6 +50,9 @@ public class OneChatkfVisitorServiceImpl extends ServiceImpl<OneChatkfVisitorMap
     private IOneChatKfVisitorMsgService oneChatKfVisitorMsgService;
 
 
+    @Autowired
+   private RemoteAstService remoteAstService;
+
 
     @Override
     public List<OneChatkfVisitor> findList(OneChatkfVisitor oneChatkfVisitor) {
@@ -75,6 +82,15 @@ public class OneChatkfVisitorServiceImpl extends ServiceImpl<OneChatkfVisitorMap
                                 .eq(OneChatKfVisitorMsg::getReadReceipt, OneChatReadMsgState.noReadReceipt))
                 );
 
+                R<SessionAnalysisResult> sessionAnalysis =
+                        remoteAstService.getSessionAnalysis(k.getId(), SecurityConstants.INNER);
+
+                if(null != sessionAnalysis && sessionAnalysis.getData() != null){
+                    k.setAiScore(
+                            sessionAnalysis.getData().getComprehensiveSummary().getOverallScore()
+                    );
+
+                }
 
             });
 

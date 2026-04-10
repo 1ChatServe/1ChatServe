@@ -16,7 +16,10 @@ public class PromptManager {
     @PostConstruct
     public void load() {
         loadYaml("prompts/recommend-reply.yml", "recommend-reply");
-        // 可扩展更多文件
+        loadYaml("prompts/session-analysis.yml", "session-analysis");
+        loadYaml("prompts/reply-recommendations.yml", "reply-recommendations");
+        loadYaml("prompts/role-setting.yml", "role-setting");
+        loadYaml("prompts/knowledge-summary.yml", "knowledge-summary");
     }
 
     private void loadYaml(String path, String prefix) {

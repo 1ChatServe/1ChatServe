@@ -1,6 +1,9 @@
 package chat.aikf.ops.controller;
 
 
+import chat.aikf.ai.api.RemoteAgentService;
+import chat.aikf.ai.api.domain.OneChatAgent;
+import chat.aikf.common.core.constant.SecurityConstants;
 import chat.aikf.common.core.domain.R;
 import chat.aikf.common.core.exception.ServiceException;
 import chat.aikf.common.core.web.controller.BaseController;
@@ -24,6 +27,10 @@ public class OneChatKfRuleController extends BaseController {
 
     @Autowired
     private IOneChatKfRuleService oneChatKfRuleService;
+
+
+    @Autowired
+    private RemoteAgentService remoteAgentService;
 
 
 
@@ -122,6 +129,13 @@ public class OneChatKfRuleController extends BaseController {
     @GetMapping("/{id}")
     public R<OneChatKfRule> findOneChatKfRule(@PathVariable Long id){
         OneChatKfRule oneChatKfRule = oneChatKfRuleService.findOneChatKfRule(id);
+
+        if(null != oneChatKfRule && oneChatKfRule.getAgentId() != null){
+            oneChatKfRule.setOneChatAgent(
+                    remoteAgentService.get(oneChatKfRule.getAgentId(), SecurityConstants.INNER).getData()
+            );
+
+        }
 
         return R.ok(oneChatKfRule);
     }

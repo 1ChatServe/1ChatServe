@@ -57,7 +57,20 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
-        
+
+
+        <dependency>
+            <groupId>chat.aikf</groupId>
+            <artifactId>OneChat-api-im</artifactId>
+        </dependency>
+
+
+        <!-- 其他依赖 ... -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
     </dependencies>
 	
     <build>

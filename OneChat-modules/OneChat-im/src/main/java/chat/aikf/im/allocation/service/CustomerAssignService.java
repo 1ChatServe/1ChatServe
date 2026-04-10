@@ -1,5 +1,7 @@
 package chat.aikf.im.allocation.service;
 
+import chat.aikf.ai.api.RemoteAgentService;
+import chat.aikf.ai.api.domain.OneChatAgent;
 import chat.aikf.common.core.constant.SecurityConstants;
 import chat.aikf.common.core.domain.R;
 import chat.aikf.common.core.exception.ServiceException;
@@ -29,6 +31,11 @@ public class CustomerAssignService {
 
     @Autowired
     private RemoteKfRuleService remoteKfRuleService;
+
+
+
+    @Autowired
+    private RemoteAgentService remoteAgentService;
 
 
 
@@ -105,28 +112,47 @@ public class CustomerAssignService {
             //判断当前客服是否在工作时间
             if (OneChatKfRule.isRuleInWorkingHours(kfRule)) {
 
-                AllocateDto allocateDto = strategyMap.get(AssignStrategyType.fromCode(kfRule.getAllocateRule())).getOnlineAgentId(kfRule, visitorId,webStyleId);
 
+                AllocateDto allocateDto = strategyMap.get(AssignStrategyType.fromCode(kfRule.getAllocateRule())).getOnlineAgentId(kfRule, visitorId,webStyleId);
 
                 if (null != allocateDto.getAllocateState() && null != allocateDto.getRuleScope()) {
 
                     OneChatKfRuleScope ruleScope = allocateDto.getRuleScope();
 
-                    if (allocateDto.getAllocateState() == AllocateType.ALLOCATE_TYPE_PD.getCode()) { //排队中
-                        identityMsgDto.setReceptionState(OneChatVisitorSate.IDLE_STATE);
-                        identityMsgDto.setToObj(ruleScope.getUserAccount());
-                        identityMsgDto.setToObjName(ruleScope.getNickName());
-                        identityMsgDto.setToObjavatar(ruleScope.getAvatar());
-                        identityMsgDto.setMsgTip("当前客服正在服务其他客户，请耐心稍等");
-                    } else if (allocateDto.getAllocateState() == AllocateType.ALLOCATE_TYPE_DH.getCode()) { //接待中）
-                        identityMsgDto.setReceptionState(OneChatVisitorSate.RECEIVE_STATE);
-                        identityMsgDto.setToObj(ruleScope.getUserAccount());
-                        identityMsgDto.setToObjName(ruleScope.getNickName());
-                        identityMsgDto.setToObjavatar(ruleScope.getAvatar());
-                        identityMsgDto.setMsgTip(kfRule.getReceiveMsg());
+
+                    if(kfRule.getAgentId() != null && new Integer(1).equals(kfRule.getAgentState())) { //开启ai接待
+                        R<OneChatAgent> oneChatAgentR
+                                = remoteAgentService.get(kfRule.getAgentId(), SecurityConstants.INNER);
+                        if(null != oneChatAgentR && oneChatAgentR.getData() != null){
+                            OneChatAgent chatAgent = oneChatAgentR.getData();
+                            identityMsgDto.setReceptionState(OneChatVisitorSate.AI_RECEIVE_STATE);
+                            identityMsgDto.setToObj(ruleScope.getUserAccount());
+                            identityMsgDto.setToObjName(chatAgent.getAgentName());
+                            identityMsgDto.setToObjavatar(chatAgent.getAgentAvatar());
+                            identityMsgDto.setMsgTip(chatAgent.getWelcomeMessage());
+                            identityMsgDto.setGuideMessage(chatAgent.getGuideMessage());
+                        }
+                    }else{
+                        if (allocateDto.getAllocateState() == AllocateType.ALLOCATE_TYPE_PD.getCode()) { //排队中
+                            identityMsgDto.setReceptionState(OneChatVisitorSate.IDLE_STATE);
+                            identityMsgDto.setToObj(ruleScope.getUserAccount());
+                            identityMsgDto.setToObjName(ruleScope.getNickName());
+                            identityMsgDto.setToObjavatar(ruleScope.getAvatar());
+                            identityMsgDto.setMsgTip("当前客服正在服务其他客户，请耐心稍等");
+                        } else if (allocateDto.getAllocateState() == AllocateType.ALLOCATE_TYPE_DH.getCode()) { //接待中）
+                            identityMsgDto.setReceptionState(OneChatVisitorSate.RECEIVE_STATE);
+                            identityMsgDto.setToObj(ruleScope.getUserAccount());
+                            identityMsgDto.setToObjName(ruleScope.getNickName());
+                            identityMsgDto.setToObjavatar(ruleScope.getAvatar());
+                            identityMsgDto.setMsgTip(kfRule.getReceiveMsg());
+                        }
                     }
 
+
+
+
                 }
+
 
                 return identityMsgDto;
 

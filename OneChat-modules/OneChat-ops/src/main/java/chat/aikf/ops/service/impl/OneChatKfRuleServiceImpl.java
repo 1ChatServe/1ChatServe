@@ -102,64 +102,65 @@ public class OneChatKfRuleServiceImpl extends ServiceImpl<OneChatKfRuleMapper, O
     @Override
     public OneChatKfRule findOneChatKfRule(Long id) {
 
-        String cacheKey = OneChatCacheKeyConstants.ImKeyGenerator.getKfRuleKey(id);
-        OneChatKfRule cachedRule = redisService.getCacheObject(cacheKey);
+//        String cacheKey = OneChatCacheKeyConstants.ImKeyGenerator.getKfRuleKey(id);
+//        OneChatKfRule cachedRule = redisService.getCacheObject(cacheKey);
 
-        if (cachedRule != null) {
-            log.debug("从缓存获取客服规则: ruleId={}, ruleName={}", id, cachedRule.getRuleName());
-            if(null == cachedRule.getId()){
-                return null;
-            }
-            return cachedRule;
-        }
+//        if (cachedRule != null) {
+//            log.debug("从缓存获取客服规则: ruleId={}, ruleName={}", id, cachedRule.getRuleName());
+//            if(null == cachedRule.getId()){
+//                return null;
+//            }
+//            return cachedRule;
+//        }
 
 
         // 3. 缓存未命中，从数据库查询
-        log.debug("缓存未命中，从数据库查询客服规则: ruleId={}", id);
+//        log.debug("缓存未命中，从数据库查询客服规则: ruleId={}", id);
 
         OneChatKfRule kfRule = this.getById(id);
 
-        if(null != kfRule){
+//        if(null != kfRule){
             kfRule.setRuleScopeList(
                     oneChatKfRuleScopeService
                             .findOneChatKfRuleScopeByRuleId(kfRule.getId())
             );
-
-            //4. 将数据库查询结果存入缓存（设置过期时间） 15分钟
-            redisService.setCacheObject(cacheKey, kfRule, OneChatCacheKeyConstants.CacheTTL.KF_RULE, TimeUnit.SECONDS);
-            log.info("客服规则已缓存: ruleId={}, ruleName={}, expire={}s",
-                    id, kfRule.getRuleName(), OneChatCacheKeyConstants.CacheTTL.KF_RULE);
-        }else{
-            // 数据库查询失败，缓存空值防止缓存穿透
-            redisService.setCacheObject(cacheKey, new OneChatKfRule(),  OneChatCacheKeyConstants.CacheTTL.CACHE_PENETRATE_TTL, TimeUnit.SECONDS);
-        }
+//
+//            //4. 将数据库查询结果存入缓存（设置过期时间） 15分钟
+//            redisService.setCacheObject(cacheKey, kfRule, OneChatCacheKeyConstants.CacheTTL.KF_RULE, TimeUnit.SECONDS);
+//            log.info("客服规则已缓存: ruleId={}, ruleName={}, expire={}s",
+//                    id, kfRule.getRuleName(), OneChatCacheKeyConstants.CacheTTL.KF_RULE);
+//        }else{
+//            // 数据库查询失败，缓存空值防止缓存穿透
+//            redisService.setCacheObject(cacheKey, new OneChatKfRule(),  OneChatCacheKeyConstants.CacheTTL.CACHE_PENETRATE_TTL, TimeUnit.SECONDS);
+//        }
 
         return kfRule;
     }
 
     @Override
     public OneChatKfRule findOneChatKfRuleByWebStyleId(Long id) {
-        String kfStyleWebkey = OneChatCacheKeyConstants.ImKeyGenerator.getKfStyleWebkey(id);
-        OneChatWebStyle oneChatWebStyle=redisService.getCacheObject(kfStyleWebkey);
-        if(null == oneChatWebStyle){
-            OneChatWebStyle newOneChatWebStyle = oneChatWebStyleService.getById(id);
-            if(null != newOneChatWebStyle){
-                redisService.setCacheObject(kfStyleWebkey, newOneChatWebStyle, OneChatCacheKeyConstants.CacheTTL.KF_STYLE_WEB_TTL, TimeUnit.SECONDS);
-                oneChatWebStyle=newOneChatWebStyle;
-            }else{
-                // 数据不存在：缓存空对象（防止穿透），TTL 较短
-                redisService.setCacheObject(
-                        kfStyleWebkey,
-                        new OneChatWebStyle(),
-                        OneChatCacheKeyConstants.CacheTTL.CACHE_PENETRATE_TTL, // 空缓存 TTL：建议 30~300 秒，避免长期污染
-                        TimeUnit.SECONDS
-                );
-            }
-        }
+        OneChatWebStyle oneChatWebStyle= oneChatWebStyleService.getById(id);
+//        String kfStyleWebkey = OneChatCacheKeyConstants.ImKeyGenerator.getKfStyleWebkey(id);
+//        OneChatWebStyle oneChatWebStyle=redisService.getCacheObject(kfStyleWebkey);
+//        if(null == oneChatWebStyle){
+//            OneChatWebStyle newOneChatWebStyle = oneChatWebStyleService.getById(id);
+//            if(null != newOneChatWebStyle){
+//                redisService.setCacheObject(kfStyleWebkey, newOneChatWebStyle, OneChatCacheKeyConstants.CacheTTL.KF_STYLE_WEB_TTL, TimeUnit.SECONDS);
+//                oneChatWebStyle=newOneChatWebStyle;
+//            }else{
+//                // 数据不存在：缓存空对象（防止穿透），TTL 较短
+//                redisService.setCacheObject(
+//                        kfStyleWebkey,
+//                        new OneChatWebStyle(),
+//                        OneChatCacheKeyConstants.CacheTTL.CACHE_PENETRATE_TTL, // 空缓存 TTL：建议 30~300 秒，避免长期污染
+//                        TimeUnit.SECONDS
+//                );
+//            }
+//        }
 
-        if(null == oneChatWebStyle.getKfRuleId()){
-            return null;
-        }
+//        if(null == oneChatWebStyle.getKfRuleId()){
+//            return null;
+//        }
 
 
         return findOneChatKfRule(oneChatWebStyle.getKfRuleId());

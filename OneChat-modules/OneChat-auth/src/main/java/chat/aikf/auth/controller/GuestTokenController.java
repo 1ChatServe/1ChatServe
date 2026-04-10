@@ -7,10 +7,12 @@ import chat.aikf.common.core.constant.Constants;
 import chat.aikf.common.core.constant.SecurityConstants;
 import chat.aikf.common.core.domain.R;
 import chat.aikf.common.core.utils.NonceUtils;
+import chat.aikf.common.core.utils.RequestContextHelper;
 import chat.aikf.common.core.utils.SecureIdUtils;
 import chat.aikf.common.core.utils.StringUtils;
 import chat.aikf.common.security.service.GuestIdentityService;
 import chat.aikf.common.security.utils.SecurityUtils;
+import chat.aikf.im.api.RemoteImService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,6 +54,10 @@ public class GuestTokenController {
     private GuestIdentityService guestIdentityService;
 
 
+    @Autowired
+    private RemoteImService remoteImService;
+
+
 
 
     /**
@@ -83,6 +89,7 @@ public class GuestTokenController {
     public R<Map<String, Object>> createSession(@Valid @RequestBody GuestLoginBody guestLoginBody, HttpServletRequest request) {
 
 
+
         if (!isValidReferer(request,oneChatAuthConfig.getAllowedDomains())) {
             return R.fail(403,"域名未授权");
         }
@@ -97,7 +104,8 @@ public class GuestTokenController {
             return R.ok(Map.of(
                     "session_token", sessionToken,
                     "expires_in", 5 * 60,
-                    "chat_session_time",chatConfig.getSessionTime()
+                    "chat_session_time",chatConfig.getSessionTime(),
+                    "user_info", remoteImService.findInitSession(guestLoginBody.getWebStyleId(),guestLoginBody.getVisitorId()).getData()
             ));
         } catch (Exception e) {
             return R.fail(401,"无效访客身份");

@@ -61,6 +61,9 @@ public class OneChatkfVisitorController extends BaseController {
 
 
 
+
+
+
     /**
      * 获取访客列表
      * @param oneChatkfVisitor
@@ -199,28 +202,27 @@ public class OneChatkfVisitorController extends BaseController {
 
 
     /**
-     * 接入会话
+     * 转人工
      * @param oneChatkfVisitor
      * @return
      */
     @PostMapping("/accessChat")
     public R accessChat(@RequestBody OneChatkfVisitor oneChatkfVisitor){
 
+
         OneChatkfVisitor oldOneChatkfVisitor = oneChatkfVisitorService.getById(oneChatkfVisitor.getId());
-
         if(null != oldOneChatkfVisitor){
+            oldOneChatkfVisitor.setCurrentState(OneChatVisitorSate.getVisitorState(OneChatVisitorSate.RECEIVE_STATE));
+            if(oneChatkfVisitorService.updateById(oldOneChatkfVisitor)){
+                remoteImService.transferUser(VisitorStateDto.builder()
+                        .webStyleId(oldOneChatkfVisitor.getWebStyleId().toString())
+                        .kfRuleId(oldOneChatkfVisitor.getKfRuleId().toString())
+                        .visitorId(oldOneChatkfVisitor.getVisitorId())
+                        .kfVisitorId(oldOneChatkfVisitor.getId().toString())
+                        .userAccount(oldOneChatkfVisitor.getUserAccount())
+                        .build(),SecurityConstants.INNER);
 
-            oldOneChatkfVisitor.setCurrentState(OneChatVisitorSate.RECEIVE_STATE);
-            oldOneChatkfVisitor.setUpdateTime(new Date());
-            oneChatkfVisitorService.updateById(oldOneChatkfVisitor);
-
-            remoteImService.accessChat(VisitorStateDto.builder()
-                    .kfVisitorId(oneChatkfVisitor.getId().toString())
-                    .kfRuleId(oldOneChatkfVisitor.getKfRuleId().toString())
-                    .visitorId(oldOneChatkfVisitor.getVisitorId())
-                    .userAccount(oldOneChatkfVisitor.getUserAccount())
-                    .webStyleId(oldOneChatkfVisitor.getWebStyleId().toString())
-                    .build(), SecurityConstants.INNER);
+            }
         }
 
         return R.ok();

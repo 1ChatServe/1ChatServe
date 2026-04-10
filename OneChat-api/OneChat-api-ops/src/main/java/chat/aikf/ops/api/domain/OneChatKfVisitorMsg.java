@@ -34,26 +34,13 @@ public class OneChatKfVisitorMsg extends BaseEntity {
     /**
      * 访客id
      */
-    private String kfVisitorId;
+    private Long kfVisitorId;
 
     /**
      * 消息热送人id
      */
     private String fromObj;
 
-    /**
-     * 消息发送人名称
-     */
-//    @TableField(exist = false)
-//    private String fromObjName;
-//
-//
-//
-//    /**
-//     * 消息发送人名称
-//     */
-//    @TableField(exist = false)
-//    private String fromObjavatar;
 
     /**
      * 消息接受人id
@@ -61,18 +48,7 @@ public class OneChatKfVisitorMsg extends BaseEntity {
 
     private String toObj;
 
-//    /**
-//     * 消息接受人名称
-//     */
-//    @TableField(exist = false)
-//    private String toObjName;
-//
-//
-//    /**
-//     * 消息接受人头像
-//     */
-//    @TableField(exist = false)
-//    private String toObjavatar;
+
 
 
     /**
@@ -100,7 +76,7 @@ public class OneChatKfVisitorMsg extends BaseEntity {
 
 
     /**
-     * 消息来源 0:访客 1:员工客服
+     * 消息来源 0:访客 1:员工客服 3:ai回复
      */
     private Integer msgSource;
 
@@ -108,6 +84,8 @@ public class OneChatKfVisitorMsg extends BaseEntity {
      * 接受内容
      */
     private String content;
+
+
 
 
     /**

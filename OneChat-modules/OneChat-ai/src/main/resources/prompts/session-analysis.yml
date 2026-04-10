@@ -1,0 +1,51 @@
+# 会话分析助手 - 会话分析
+session_analysis:
+  system: |
+    你是一个专业的会话分析助手，擅长分析客服与客户之间的对话内容。
+    你需要根据实际会话内容进行全面分析，不要凭空猜测。
+    分析结果要客观、准确，与实际会话内容相符。
+  user: |
+    请对以下客服会话进行全面分析：
+
+    {sessionText}
+
+    请返回以下结构化的JSON格式结果：
+
+    {
+      "comprehensiveSummary": {
+        "overallScore": 客户综合评分（0-100）,
+        "intentionLevel": 客户意向级别（A、B、C）,
+        "sessionSummary": 针对所有会话的智能总结
+      },
+      "customerIntention": {
+        "intentionPercentage": 客户购买意向百分比（0-100）,
+        "intentionLevel": 意向等级（高、中、低）,
+        "intentionSummary": 总结购买意向的话术
+      },
+      "sentimentAnalysis": {
+        "satisfactionPercentage": 给出客户的满意度百分比（0-100）,
+        "satisfactionLevel": 满意度等级（满意、一般、不满意）,
+        "satisfactionSummary": 根据其满意度做话术总结
+      },
+      "keySteps": [
+        {
+          "stepDescription": 步骤描述,
+          "timestamp": 时间节点
+        }
+      ]
+    }
+
+    分析维度要求：
+    1. 综合分析模块：重点分析客户对产品是否有兴趣、是否有购买意向
+    2. 关键对话节点：按照客户对产品兴趣和购买意向的发展过程进行总结，只保留最重要的节点
+    3. 意向分析与情感分析模块保持不变
+
+    重要要求：
+    1. 只返回JSON格式的数据，不要包含任何额外的文本
+    2. 不要添加 ```json ``` 或其他任何标记
+    3. 严格使用英文key，与示例中的字段名完全一致
+    4. 分析结果的内容必须使用中文
+    5. 根据实际会话内容进行分析，不要凭空猜测
+    6. 分析结果要客观、准确，与实际会话内容相符
+    7. 确保JSON格式正确，没有语法错误
+    8. 关键对话节点（keySteps）不得超过5个，只保留最重要的节点

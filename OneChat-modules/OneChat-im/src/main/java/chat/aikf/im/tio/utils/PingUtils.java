@@ -1,7 +1,8 @@
 package chat.aikf.im.tio.utils;
 
-import chat.aikf.im.tio.model.GuestIdentityMsgDto;
+import chat.aikf.im.api.domain.dto.GuestIdentityMsgDto;
 import chat.aikf.im.tio.model.UserIdentityMsgDto;
+import chat.aikf.ops.api.constant.OneChatVisitorSate;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
@@ -22,17 +23,11 @@ public class PingUtils {
     }
 
 
-    //构造ping的响应(访客端)
-    public static String buildPongMessageToGuest(){
+
+    public static String buildPong(){
 
 
-        return JSONUtil.toJsonStr(GuestIdentityMsgDto.builder().initState(3).build());
+        return JSONUtil.toJsonStr("{\"type\":\"pong\"}");
     }
 
-    //构造ping的响应(管理端)
-    public static String buildPongMessageToUser(){
-
-
-        return JSONUtil.toJsonStr(UserIdentityMsgDto.builder().initState(3).build());
-    }
 }

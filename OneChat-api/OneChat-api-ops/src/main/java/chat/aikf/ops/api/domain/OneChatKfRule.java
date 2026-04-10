@@ -1,8 +1,10 @@
 package chat.aikf.ops.api.domain;
 
+import chat.aikf.ai.api.domain.OneChatAgent;
 import chat.aikf.common.core.web.domain.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -79,6 +81,18 @@ public class OneChatKfRule extends BaseEntity {
 
 
     /**
+     * Agentid
+     */
+    private Long agentId;
+
+
+    /**
+     * 启用agent优先接待 0:不启动；1:启动
+     */
+    private Integer agentState;
+
+
+    /**
      * 结束提示语
      */
     private String endMsg;
@@ -86,6 +100,7 @@ public class OneChatKfRule extends BaseEntity {
     /**
      * 删除标志（0代表存在 2代表删除）
      */
+    @TableLogic
     private String delFlag;
 
 
@@ -94,6 +109,10 @@ public class OneChatKfRule extends BaseEntity {
      */
     @TableField(exist = false)
     private List<OneChatKfRuleScope> ruleScopeList;
+
+
+    @TableField(exist = false)
+    private OneChatAgent oneChatAgent;
 
 
     /**

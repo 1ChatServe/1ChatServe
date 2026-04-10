@@ -73,6 +73,26 @@ public interface RemoteKfVisitorService {
     public R<List<OneChatkfVisitor>> findAppointVisitorList(OneChatkfVisitor oneChatkfVisitor,@RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
 
+    /**
+     * 跟进主键获取访客
+     * @param id
+     * @param source
+     * @return
+     */
+    @GetMapping("/kfVisitor/getOneChatkfVisitorById/{id}")
+    public R<OneChatkfVisitor> getOneChatkfVisitorById(@PathVariable Long id,@RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+
+
+
+    /**
+     * 获取消息列表
+     * @param kfVisitorId
+     * @return
+     */
+    @GetMapping("/kfVisitor/getMsgList/{kfVisitorId}")
+    public R< List<OneChatKfVisitorMsg> > getMsgList(@PathVariable Long kfVisitorId,@RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+
+
 
 
 }

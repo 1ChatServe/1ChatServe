@@ -117,5 +117,16 @@ public class Constants
     public static final String REFERER="Referer";
 
 
+    /**
+     * 数据正常状态
+     */
+    public static final String COMMON="0";
+
+    /**
+     * 数据删除状态
+     */
+    public static final  String DEL_FLAG="2";
+
+
 
 }
