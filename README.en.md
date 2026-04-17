@@ -19,7 +19,7 @@
 ### 0.1 Find Us
 Open source official website (technical documentation)： http://aikf.chat/
 
-Github: https://github.com/OneChatAIServe/AI-1ChatServe
+Github: https://github.com/1ChatServe/1ChatServe
 
 Gitee: https://gitee.com/visualinsur-xbkj/1ChatServe
 
