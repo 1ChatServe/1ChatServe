@@ -18,7 +18,7 @@
 
 ### 0.1 找到我们
 - 官网(技术文档等)：[https://1chatserve.com](https://1chatserve.com)
-- Github: https://github.com/OneChatAIServe/AI-1ChatServe
+- Github:https://github.com/1ChatServe/1ChatServe
 - Gitee: https://gitee.com/visualinsur-xbkj/1ChatServe
 - GitCode: https://gitcode.com/OneChatServe/1ChatServe
 
